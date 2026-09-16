@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 def calculate_portfolio_return(annual_returns, weights):
@@ -15,3 +16,14 @@ def calculate_portfolio_variance(weights, covariance_matrix):
     ).to_numpy().item()
 
     return float(portfolio_variance)
+
+
+def calculate_sharpe_ratio(portfolio_return, portfolio_variance, risk_free_rate):
+    portfolio_std_dev = math.sqrt(portfolio_variance)
+
+    if portfolio_std_dev == 0:
+        return 0.0
+
+    portfolio_sharpe_ratio = (portfolio_return - risk_free_rate) / portfolio_std_dev
+
+    return portfolio_sharpe_ratio
