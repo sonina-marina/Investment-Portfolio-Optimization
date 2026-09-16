@@ -4,7 +4,7 @@ from scipy.optimize import _constraints, minimize
 from portfolio import (
     calculate_portfolio_return,
     calculate_portfolio_variance,
-    calculate_sharp_ratio,
+    calculate_sharpe_ratio,
 )
 
 
