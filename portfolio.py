@@ -1,7 +1,6 @@
 import numpy as np
 import math
 
-
 def calculate_portfolio_return(annual_returns, weights):
     portfolio_return = (annual_returns * weights).sum()
     return portfolio_return
