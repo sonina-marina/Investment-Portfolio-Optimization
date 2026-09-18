@@ -15,6 +15,22 @@ from optimization import (
     calculate_efficient_frontier
 )
 
+st.markdown("""
+    <style>
+    .block-container {
+        padding-top: 1rem !important; /* Было около 6rem, сделали аккуратные 2rem */
+    }
+    h1 {
+        margin-bottom: 0px !important;
+        padding-bottom: 0px !important;
+    }
+    h2 {
+        margin-top: 15px !important;
+        padding-top: 0px !important;
+    }rder: 1px solid #e0e4ec;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 st.set_page_config(
     page_title="Portfolio Optimization",
@@ -47,7 +63,7 @@ AVAILABLE_TICKERS = [
 def main():
 
     #--- Left side ---
-    left_column, spacer, right_column = st.columns([1, 0.15, 1.7])
+    left_column, spacer, right_column = st.columns([0.3, 0.15, 0.55])
 
     with left_column:
 
@@ -71,7 +87,8 @@ def main():
 
         calculate_button = st.button(
             "Calculate",
-            type="primary"
+            type="primary",
+            use_container_width=True
         )
 
     #--- Calculations ---
@@ -116,30 +133,37 @@ def main():
 
         with left_column:
 
-            st.header("Results")
-
-            st.subheader("Minimum Variance Portfolio")
+            st.subheader("Results")
 
             min_weights = min_variance_result.x
             min_variance = min_variance_result.fun
             min_volatility = math.sqrt(min_variance)
 
+
+            st.markdown("**Minimum Variance Portfolio**")
+                
+            min_portfolio_text = ""
             for ticker, weight in zip(tickers, min_weights):
-                st.write(f"{ticker}: {weight:.2%}")
+                if weight > 0.001:  # выводим только то, у чего вес больше нуля
+                    min_portfolio_text += f"{ticker}: {weight:.2%}  \n"
+            
+            min_portfolio_text += f"**Volatility**: {min_volatility:.2%}"
 
-            st.write(f"Volatility: {min_volatility:.2%}")
+            st.markdown(min_portfolio_text)
 
-            st.divider()
+            st.markdown("<hr style='margin: 5px 0;'>", unsafe_allow_html=True)
 
-            st.subheader("Maximum Sharpe Portfolio")
+            st.markdown("**Maximum Sharpe Portfolio**")
 
             max_weights = max_sharpe_result.x
             max_sharpe = -max_sharpe_result.fun
             
+            max_sharpe_text = ""
             for ticker, weight in zip(tickers, max_weights):
-                st.write(f"**{ticker}:** {weight:.2%}")
+                max_sharpe_text += f"{ticker}: {weight:.2%}  \n"
 
-            st.write(f"Sharpe Ratio: {max_sharpe:.2f}")
+            max_sharpe_text += f"**Sharpe Ratio**: {max_sharpe:.2f}"
+            st.markdown(max_sharpe_text)
 
         #--- Right side ---
 
