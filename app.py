@@ -18,7 +18,7 @@ from optimization import (
 st.markdown("""
     <style>
     .block-container {
-        padding-top: 1rem !important; /* Было около 6rem, сделали аккуратные 2rem */
+        padding-top: 1rem !important; §
     }
     h1 {
         margin-bottom: 0px !important;
@@ -63,7 +63,7 @@ AVAILABLE_TICKERS = [
 def main():
 
     #--- Left side ---
-    left_column, spacer, right_column = st.columns([0.3, 0.15, 0.55])
+    left_column, spacer, right_column = st.columns([0.4, 0.1, 0.50])
 
     with left_column:
 
@@ -135,35 +135,47 @@ def main():
 
             st.subheader("Results")
 
+            col_mvp, col_sharpe = st.columns(2)
+
             min_weights = min_variance_result.x
             min_variance = min_variance_result.fun
             min_volatility = math.sqrt(min_variance)
 
+            with col_mvp:
+                st.markdown("**Minimum Variance**")
 
-            st.markdown("**Minimum Variance Portfolio**")
+                min_weights = min_variance_result.x
+                min_variance = min_variance_result.fun
+                min_volatility = math.sqrt(min_variance)
+
+                min_portfolio_text = ""
+                for ticker, weight in zip(tickers, min_weights):
+                    min_portfolio_text += f"{ticker}: "
+                    if weight > 0.001:
+                        min_portfolio_text += f"{weight:.2%}  \n"
+                    else:
+                        min_portfolio_text += f"0%  \n"
                 
-            min_portfolio_text = ""
-            for ticker, weight in zip(tickers, min_weights):
-                if weight > 0.001:  # выводим только то, у чего вес больше нуля
-                    min_portfolio_text += f"{ticker}: {weight:.2%}  \n"
-            
-            min_portfolio_text += f"**Volatility**: {min_volatility:.2%}"
+                min_portfolio_text += f"**Volatility**: {min_volatility:.2%}"
+                st.markdown(min_portfolio_text)
 
-            st.markdown(min_portfolio_text)
 
-            st.markdown("<hr style='margin: 5px 0;'>", unsafe_allow_html=True)
+            with col_sharpe:
+                st.markdown("**Maximum Sharpe**")
 
-            st.markdown("**Maximum Sharpe Portfolio**")
+                max_weights = max_sharpe_result.x
+                max_sharpe = -max_sharpe_result.fun
+                
+                max_sharpe_portfolio_text = ""
+                for ticker, weight in zip(tickers, max_weights):
+                    max_sharpe_portfolio_text += f"{ticker}: "
+                    if weight > 0.001:
+                        max_sharpe_portfolio_text += f"{weight:.2%}  \n"
+                    else:
+                        max_sharpe_portfolio_text += f"0%  \n"
 
-            max_weights = max_sharpe_result.x
-            max_sharpe = -max_sharpe_result.fun
-            
-            max_sharpe_text = ""
-            for ticker, weight in zip(tickers, max_weights):
-                max_sharpe_text += f"{ticker}: {weight:.2%}  \n"
-
-            max_sharpe_text += f"**Sharpe Ratio**: {max_sharpe:.2f}"
-            st.markdown(max_sharpe_text)
+                max_sharpe_portfolio_text += f"**Sharpe Ratio**: {max_sharpe:.2f}"
+                st.markdown(max_sharpe_portfolio_text)
 
         #--- Right side ---
 
@@ -180,8 +192,12 @@ def main():
             )
 
             efficient_mask = frontier_returns >= min_return
-            efficient_returns = frontier_returns[efficient_mask]
-            efficient_volatilities = frontier_volatilities[efficient_mask]
+            raw_returns = frontier_returns[efficient_mask]
+            raw_volatilities = frontier_volatilities[efficient_mask]
+
+            sort_indices = np.argsort(raw_volatilities)
+            efficient_volatilities = raw_volatilities[sort_indices]
+            efficient_returns = raw_returns[sort_indices]
 
             ax.plot(
                 efficient_volatilities,
@@ -217,12 +233,12 @@ def main():
                 max_return,
                 marker="*",
                 s=150,
-                label="Maximum Sharpe"
+                label="Maximum Sharpe",
+                color="orange"
             )
 
             ax.set_xlabel("Volatility")
             ax.set_ylabel("Expected Return")
-            ax.set_title("Efficient Frontier")
 
             ax.legend()
             ax.grid(True)
