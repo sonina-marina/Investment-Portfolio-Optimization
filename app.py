@@ -18,7 +18,7 @@ from optimization import (
 st.markdown("""
     <style>
     .block-container {
-        padding-top: 1rem !important; §
+        padding-top: 1rem !important; 
     }
     h1 {
         margin-bottom: 0px !important;
