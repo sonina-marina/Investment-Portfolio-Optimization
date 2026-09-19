@@ -44,6 +44,12 @@ The planned workflow includes:
     * Compare different optimized portfolios.
     * Use the results to better understand the relationship between risk and return.
 
+## What I’ve Already Done
+
+The project includes an interactive interface built with Streamlit. Users can select stocks from a limited set of available assets (the selection is intentionally limited as this is an educational project), set a Risk-free rate, and run the portfolio optimization.
+
+The application calculates the optimal portfolio weights and displays the main portfolio metrics. The results are presented together with a chart that visualizes the portfolio and its performance.
+
 ## Financial Theory
 
 The theoretical part of the project is based on concepts from modern portfolio theory, including:
