@@ -50,6 +50,8 @@ The project includes an interactive interface built with Streamlit. Users can se
 
 The application calculates the optimal portfolio weights and displays the main portfolio metrics. The results are presented together with a chart that visualizes the portfolio and its performance.
 
+![Example](https://github.com/sonina-marina/Investment-Portfolio-Optimization/blob/main/docs/images/example.png)
+
 ## Financial Theory
 
 The theoretical part of the project is based on concepts from modern portfolio theory, including:
